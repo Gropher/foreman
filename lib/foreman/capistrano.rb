@@ -31,22 +31,22 @@ if defined?(Capistrano)
         args << "-u #{foreman_user}"
         args << "-l #{foreman_log}"
         args << "-c #{foreman_concurrency}" if foreman_concurrency
-        run "cd #{release_path} && #{sudo} #{bundle_cmd} exec foreman export #{args.join(' ')}"
+        sudo "cd #{release_path} && #{bundle_cmd} exec foreman export #{args.join(' ')}"
       end
 
       desc "Start the application services"
       task :start, :roles => :app do
-        run "#{sudo} start #{application}"
+        sudo "start #{application}"
       end
 
       desc "Stop the application services"
       task :stop, :roles => :app do
-        run "#{sudo} stop #{application}"
+        sudo "stop #{application}"
       end
 
       desc "Restart the application services"
       task :restart, :roles => :app do
-        run "#{sudo} start #{application} || #{sudo} restart #{application}"
+        sudo "start #{application} || restart #{application}"
       end
 
     end
