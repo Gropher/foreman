@@ -2,13 +2,13 @@ $:.unshift File.expand_path("../lib", __FILE__)
 require "foreman/version"
 
 Gem::Specification.new do |gem|
-  gem.name     = "foreman"
+  gem.name     = "foreman-capistrano"
   gem.version  = Foreman::VERSION
 
-  gem.author   = "David Dollar"
-  gem.email    = "ddollar@gmail.com"
-  gem.homepage = "http://github.com/ddollar/foreman"
-  gem.summary  = "Process manager for applications with multiple components"
+  gem.author   = "David Dollar, Gropher"
+  gem.email    = "ddollar@gmail.com, grophen@gmail.com"
+  gem.homepage = "http://github.com/Gropher/foreman"
+  gem.summary  = "Process manager for applications with multiple components + capistrano support out of the box"
 
   gem.description = gem.summary
 

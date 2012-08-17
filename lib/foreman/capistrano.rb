@@ -12,7 +12,7 @@ if defined?(Capistrano)
         set :foreman_procfile,    "Procfile"
         set :foreman_app,         application
         set :foreman_user,        user
-        set :foreman_log,         "#{shared_path}/log"
+        set :foreman_log,         "\#{shared_path}/log"
         set :foreman_concurrency, false
       DESC
       task :export, :roles => :app do
@@ -31,7 +31,7 @@ if defined?(Capistrano)
         args << "-u #{foreman_user}"
         args << "-l #{foreman_log}"
         args << "-c #{foreman_concurrency}" if foreman_concurrency
-        run "cd #{release_path} && #{sudo} #{bundle_cmd} exec foreman export #{args.join(' ')}"
+        run "cd #{release_path} && #{bundle_cmd} exec foreman export #{args.join(' ')}"
       end
 
       desc "Start the application services"
