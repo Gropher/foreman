@@ -22,6 +22,7 @@ if defined?(Capistrano)
         foreman_procfile    = fetch(:foreman_procfile, "Procfile")
         foreman_app         = fetch(:foreman_app, application)
         foreman_user        = fetch(:foreman_user, user)
+        foreman_port        = fetch(:foreman_port, 5000)
         foreman_log         = fetch(:foreman_log, "#{shared_path}/log")
         foreman_concurrency = fetch(:foreman_concurrency, false)
 
@@ -30,6 +31,7 @@ if defined?(Capistrano)
         args << "-a #{foreman_app}"
         args << "-u #{foreman_user}"
         args << "-l #{foreman_log}"
+        args << "-p #{foreman_port}"
         args << "-c #{foreman_concurrency}" if foreman_concurrency
         run "cd #{release_path} && #{bundle_cmd} exec foreman export #{args.join(' ')}"
       end
