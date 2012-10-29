@@ -2,6 +2,6 @@ start on starting <%= app %>-<%= name %>
 stop on stopping <%= app %>-<%= name %>
 respawn
 
-exec su - <%= user %> --shell=/bin/bash -c 'cd <%= engine.root %>; trap '\''kill -QUIT $(jobs -p)'\'' EXIT; export PORT=<%= port %>;<% engine.env.each_pair do |var,env| %> export <%= var.upcase %>=<%= shell_quote(env) %>; <% end %> <%= process.command %> >> <%= log %>/<%=name%>-<%=num%>.log 2>&1'
+exec su - <%= user %> --shell=/bin/bash -c 'cd <%= engine.root %>; trap '\''jobs_count=$(jobs -p | wc -l); while [ $jobs_count -gt 0 ]; do kill -9 $(jobs -p); sleep 1; jobs_count=$(jobs -p | wc -l); done'\'' EXIT; export PORT=<%= port %>;<% engine.env.each_pair do |var,env| %> export <%= var.upcase %>=<%= shell_quote(env) %>; <% end %> <%= process.command %> >> <%= log %>/<%=name%>-<%=num%>.log 2>&1'
 
 
