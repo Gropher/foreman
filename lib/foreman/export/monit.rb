@@ -11,7 +11,7 @@ module Foreman
 
         @user ||= app
         @log = File.expand_path("#{@location}/log")
-        @pid = File.expand_path("#{@location}/pid")
+        @pid = File.expand_path("#{@location}/pids")
         @check = File.expand_path("#{@location}/lock")
         @location = File.expand_path(@location)
         FileUtils.mkdir_p(@pid)
