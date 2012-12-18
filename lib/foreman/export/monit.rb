@@ -6,10 +6,6 @@ module Foreman
     class Monit < Foreman::Export::Base
       attr_reader :pid, :check
 
-      def self.template_root
-        @template_root ||= File.expand_path('../../data/templates', __FILE__)
-      end
-
       def initialize(location, engine, options={})
         super
         @pid = options[:pid]
@@ -28,6 +24,7 @@ module Foreman
         @location = File.expand_path(@location)
 
         engine.procfile.entries.each do |process|
+          1.upto(engine.formation[process.name]) do |num| 
           wrapper_template = export_template("monit", "wrapper.sh.erb", self.class.template_root)
           wrapper_config   = ERB.new(wrapper_template, 0, "-").result(binding)
           write_file wrapper_path_for(process), wrapper_config
