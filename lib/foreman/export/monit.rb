@@ -22,15 +22,10 @@ module Foreman
         @location = File.expand_path(@location)
 
         engine.procfile.entries.each do |process|
-          wrapper_template = export_template("wrapper.sh.erb")
-          wrapper_config   = ERB.new(wrapper_template, 0, "-").result(binding)
-          write_file wrapper_path_for(process), wrapper_config
-          FileUtils.chmod 0755, wrapper_path_for(process)
+          write_template "monit/wrapper.sh.erb", "#{app}-#{process.name}.sh", binding
         end
 
-        monitrc_template = export_template("monitrc.erb")
-        monitrc_config   = ERB.new(monitrc_template, 0, "-").result(binding)
-        write_file "#{location}/#{app}.monitrc", monitrc_config
+        write_template "monit/monitrc.erb", "#{app}.monitrc", binding
       end
 
       def wrapper_path_for(process)
