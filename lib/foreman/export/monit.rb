@@ -6,20 +6,16 @@ module Foreman
     class Monit < Foreman::Export::Base
       attr_reader :pid, :check
 
-      def initialize(location, engine, options={})
-        super
-        @pid = options[:pid]
-        @check = options[:check]
-      end
-
       def export
         super
 
         @user ||= app
-        @log = File.expand_path(@log || "/var/log/#{app}")
-        @pid = File.expand_path(@pid || "/var/run/#{app}")
-        @check = File.expand_path(@check || "/var/lock/subsys/#{app}")
+        @log = File.expand_path("#{@location}/log")
+        @pid = File.expand_path("#{@location}/pid")
+        @check = File.expand_path("#{@location}/lock")
         @location = File.expand_path(@location)
+        FileUtils.mkdir_p(@pid)
+        FileUtils.mkdir_p(@check)
 
         engine.procfile.entries.each do |process|
           write_template "monit/wrapper.sh.erb", "#{app}-#{process.name}.sh", binding
