@@ -1,5 +1,5 @@
 <% engine.procfile.entries.each do |process| -%>
-<% 1.upto(concurrency[process.name]) do |num| -%>
+<% 1.upto(engine.formation[process.name]) do |num| -%>
 <% port = engine.port_for(process, num, self.port) -%>
 check process <%= app %>-<%= process.name %>-<%= num %> with pidfile <%= pid_file_for(process, num) %>
   depends on <%= File.basename(check_file_for(process)) %>
