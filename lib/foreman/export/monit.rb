@@ -4,7 +4,7 @@ require 'foreman/cli'
 module Foreman
   module Export
     class Monit < Foreman::Export::Base
-      attr_reader :pid, :check, :log
+      attr_reader :pid, :check
 
       def export
         super
