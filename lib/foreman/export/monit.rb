@@ -24,20 +24,20 @@ module Foreman
         write_template "monit/monitrc.erb", "#{app}.monitrc", binding
       end
 
-      def wrapper_path_for(process)
-        File.join(location, "#{app}-#{process.name}.sh")
+      def wrapper_path_for(name)
+        File.join(location, "#{app}-#{name}.sh")
       end
 
-      def pid_file_for(process, num)
-        File.join(pid, "#{process.name}-#{num}.pid")
+      def pid_file_for(name, num)
+        File.join(pid, "#{name}-#{num}.pid")
       end
 
-      def log_file_for(process, num)
-        File.join(log, "#{process.name}-#{num}.log")
+      def log_file_for(name, num)
+        File.join(log, "#{name}-#{num}.log")
       end
 
-      def check_file_for(process)
-        File.join(check, "#{process.name}.restart")
+      def check_file_for(name)
+        File.join(check, "#{name}.restart")
       end
     end
   end
