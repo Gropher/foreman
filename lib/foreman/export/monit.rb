@@ -17,8 +17,8 @@ module Foreman
         FileUtils.mkdir_p(@pid)
         FileUtils.mkdir_p(@check)
 
-        engine.procfile.entries.each do |process|
-          write_template "monit/wrapper.sh.erb", "#{app}-#{process.name}.sh", binding
+        engine.each_process do |name, process|
+          write_template "monit/wrapper.sh.erb", "#{app}-#{name}.sh", binding
         end
 
         write_template "monit/monitrc.erb", "#{app}.monitrc", binding
