@@ -1,6 +1,6 @@
 <% engine.each_process  do |name, process| %>
 <% 1.upto(engine.formation[name]) do |num| %>
-<% port = engine.port_for(name, num, self.port) %>
+<% port = engine.port_for(process, num, self.port) %>
 check process <%= app %>-<%= name %>-<%= num %> with pidfile <%= pid_file_for(name, num) %>
   depends on <%= File.basename(check_file_for(name)) %>
   group <%= app %>-<%= name %>
