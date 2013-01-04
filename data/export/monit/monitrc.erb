@@ -1,15 +1,19 @@
 <% engine.each_process  do |name, process| %>
 <% 1.upto(engine.formation[name]) do |num| %>
-<% port = engine.port_for(process, num, self.port) %>
+<% port = engine.port_for(process, num) %>
 check process <%= app %>-<%= name %>-<%= num %> with pidfile <%= pid_file_for(name, num) %>
   depends on <%= File.basename(check_file_for(name)) %>
+  depends on <%= File.basename(app_check_file) %>
   group <%= app %>-<%= name %>
-  start program "/bin/sh -c 'PORT=<%= port %> PID_FILE=<%= pid_file_for(name, num) %> LOG_FILE=<%= log_file_for(name, num) %> <%= wrapper_path_for(name) %> start'" as uid <%= user %>
-  stop program "/bin/sh -c 'PID_FILE=<%= pid_file_for(name, num) %> <%= wrapper_path_for(name) %> stop'" as uid <%= user %>
+  group <%= app %>
+  start program "/usr/local/rvm/bin/rvm-shell -c 'RAILS_ENV=production PORT=<%= port %> PID_FILE=<%= pid_file_for(name, num) %> LOG_FILE=<%= log_file_for(name, num) %> <%= wrapper_path_for(name) %> start'"
+  stop program "/usr/local/rvm/bin/rvm-shell -c 'PID_FILE=<%= pid_file_for(name, num) %> <%= wrapper_path_for(name) %> stop'"
 
 <% end %>
 check file <%= File.basename(check_file_for(name)) %> with path <%= check_file_for(name) %>
   if changed timestamp then restart
 
-
 <% end %>
+
+check file <%= File.basename(app_check_file) %> with path <%= app_check_file %>
+  if changed timestamp then restart

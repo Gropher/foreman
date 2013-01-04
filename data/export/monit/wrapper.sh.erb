@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 PID_FILE=${PID_FILE:-<%= pid %>/<%= name %>.pid}
 LOG_FILE=${LOG_FILE:-<%= log %>/<%= name %>.log}
@@ -24,7 +24,7 @@ function start() {
       fi
     fi
 
-    <%= process.command %> >> $LOG_FILE 2>&1 &
+    cd <%= engine.root %>; <%= process.command %> >> $LOG_FILE 2>&1 &
 
     if [ $? -eq 0 ]; then
         echo $! > $PID_FILE
@@ -41,7 +41,7 @@ function stop() {
     then
         read pid < $PID_FILE
         if checkpid $pid 2>&1; then
-            kill -SIGTERM $pid
+            kill -TERM $pid
             if [ $? -eq 0 ]; then
                 echo $! > $PID_FILE
                 echo "[OK]"
