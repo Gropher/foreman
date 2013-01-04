@@ -33,24 +33,35 @@ if defined?(Capistrano)
         args << "-l #{foreman_log}"
         args << "-p #{foreman_port}"
         args << "-c #{foreman_concurrency}" if foreman_concurrency
-        run "cd #{release_path} && #{bundle_cmd} exec foreman export #{args.join(' ')}"
+        run "cd #{current_path} && #{bundle_cmd} exec foreman export #{args.join(' ')}"
       end
 
       desc "Start the application services"
       task :start, :roles => :app do
-        run "#{sudo} start #{application}"
+        if foreman_format == 'upstart'
+          run "#{sudo} start #{application}"
+        elsif foreman_format == 'monit'
+          run "monit start -g #{application}"
+        end
       end
 
       desc "Stop the application services"
       task :stop, :roles => :app do
-        run "#{sudo} stop #{application}"
+        if foreman_format == 'upstart'
+          run "#{sudo} stop #{application}"
+        elsif foreman_format == 'monit'
+          run "monit stop -g #{application}"
+        end
       end
 
       desc "Restart the application services"
       task :restart, :roles => :app do
-        run "#{sudo} start #{application} || #{sudo} restart #{application}"
+        if foreman_format == 'upstart'
+          run "#{sudo} start #{application} || #{sudo} restart #{application}"
+        elsif foreman_format == 'monit'
+          run "monit restart -g #{application}"
+        end
       end
-
     end
   end
 end
