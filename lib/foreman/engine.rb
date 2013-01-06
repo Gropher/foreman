@@ -154,7 +154,7 @@ class Foreman::Engine
   # @returns [String]  The root directory
   #
   def root
-    File.expand_path(options[:root] || Dir.pwd)
+    File.expand_path(options[:root] || `pwd -L`.strip)
   end
 
   # Get the port for a given process and offset
