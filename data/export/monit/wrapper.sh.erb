@@ -43,7 +43,7 @@ function stop() {
         if checkpid $pid 2>&1; then
             kill -TERM $pid
             sleep 1
-            if checkpid $pid 2>&1;; then
+            if checkpid $pid 2>&1; then
                 echo "[FAILED TO STOP. TERMINATING]"
                 kill -KILL $pid
             else
