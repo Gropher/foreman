@@ -38,27 +38,27 @@ if defined?(Capistrano)
 
       desc "Start the application services"
       task :start, :roles => :app do
-        if foreman_format == 'upstart'
+        if fetch(:foreman_format, "upstart") == 'upstart'
           run "#{sudo} start #{application}"
-        elsif foreman_format == 'monit'
+        elsif fetch(:foreman_format, "upstart") == 'monit'
           run "monit start -g #{application}"
         end
       end
 
       desc "Stop the application services"
       task :stop, :roles => :app do
-        if foreman_format == 'upstart'
+        if fetch(:foreman_format, "upstart") == 'upstart'
           run "#{sudo} stop #{application}"
-        elsif foreman_format == 'monit'
+        elsif fetch(:foreman_format, "upstart") == 'monit'
           run "monit stop -g #{application}"
         end
       end
 
       desc "Restart the application services"
       task :restart, :roles => :app do
-        if foreman_format == 'upstart'
+        if fetch(:foreman_format, "upstart") == 'upstart'
           run "#{sudo} start #{application} || #{sudo} restart #{application}"
-        elsif foreman_format == 'monit'
+        elsif fetch(:foreman_format, "upstart") == 'monit'
           run "monit restart -g #{application}"
         end
       end
