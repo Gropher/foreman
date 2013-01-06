@@ -42,13 +42,14 @@ function stop() {
         read pid < $PID_FILE
         if checkpid $pid 2>&1; then
             kill -TERM $pid
-            if [ $? -eq 0 ]; then
+            sleep 1
+            if checkpid $pid 2>&1;; then
+                echo "[FAILED TO STOP. TERMINATING]"
+                kill -KILL $pid
+            else
                 echo $! > $PID_FILE
                 echo "[OK]"
                 rm -rf $PID_FILE
-            else
-                echo "[FAIL]"
-                exit $STATUS_UNKNOWN
             fi
         else
             echo "[FAIL] process with PID ${pid} does not exist"
