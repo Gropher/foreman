@@ -59,7 +59,7 @@ if defined?(Capistrano)
         if fetch(:foreman_format, "upstart") == 'upstart'
           run "#{sudo} start #{application} || #{sudo} restart #{application}"
         elsif fetch(:foreman_format, "upstart") == 'monit'
-          run "monit restart -g #{application}"
+          run "monit reload; sleep 1; monit restart -g #{application}"
         end
       end
     end
