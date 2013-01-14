@@ -1,5 +1,5 @@
 module Foreman
 
-  VERSION = "0.52.5"
+  VERSION = "0.52.6"
 
 end
