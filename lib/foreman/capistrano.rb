@@ -1,7 +1,7 @@
 if defined?(Capistrano)
   Capistrano::Configuration.instance(:must_exist).load do
 
-    namespace :foreman do
+    namespace :deploy do
       desc <<-DESC
         Export the Procfile to upstart.  Will use sudo if available.
 
@@ -15,7 +15,7 @@ if defined?(Capistrano)
         set :foreman_log,         "\#{shared_path}/log"
         set :foreman_concurrency, false
       DESC
-      task :export, :roles => :app do
+      task :restart, :roles => :app do
         bundle_cmd          = fetch(:bundle_cmd, "bundle")
         foreman_format      = fetch(:foreman_format, "upstart")
         foreman_location    = fetch(:foreman_location, "/etc/init")
@@ -33,34 +33,17 @@ if defined?(Capistrano)
         args << "-l #{foreman_log}"
         args << "-p #{foreman_port}"
         args << "-c #{foreman_concurrency}" if foreman_concurrency
-        run "cd #{current_path} && #{bundle_cmd} exec foreman export #{args.join(' ')}"
-      end
-
-      desc "Start the application services"
-      task :start, :roles => :app do
-        if fetch(:foreman_format, "upstart") == 'upstart'
-          run "#{sudo} start #{application}"
-        elsif fetch(:foreman_format, "upstart") == 'monit'
-          run "monit start -g #{application}"
-        end
-      end
-
-      desc "Stop the application services"
-      task :stop, :roles => :app do
-        if fetch(:foreman_format, "upstart") == 'upstart'
-          run "#{sudo} stop #{application}"
-        elsif fetch(:foreman_format, "upstart") == 'monit'
-          run "monit stop -g #{application}"
-        end
-      end
-
-      desc "Restart the application services"
-      task :restart, :roles => :app do
-        if fetch(:foreman_format, "upstart") == 'upstart'
-          run "#{sudo} start #{application} || #{sudo} restart #{application}"
-        elsif fetch(:foreman_format, "upstart") == 'monit'
-          run "monit reload; sleep 1; monit restart -g #{application}"
-        end
+        export_cmd = "cd #{current_path} && #{bundle_cmd} exec foreman export #{args.join(' ')}"
+        run ["sudo /etc/init.d/puppet stop",
+            "sudo /etc/init.d/monit stop",  
+            "sudo /etc/init.d/nginx stop",
+            "monit stop -g #{application}", 
+            export_cmd, 
+            "monit start -g #{application}",
+            "sleep 20", 
+            "sudo /etc/init.d/nginx start",
+            "sudo /etc/init.d/monit start", 
+            "sudo /etc/init.d/puppet start"].join('; ')
       end
     end
   end
