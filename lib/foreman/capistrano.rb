@@ -3,7 +3,7 @@ if defined?(Capistrano)
 
     namespace :deploy do
       desc <<-DESC
-        Export the Procfile to upstart.  Will use sudo if available.
+        Export the Procfile and restart application.
 
         You can override any of these defaults by setting the variables shown below.
 
@@ -15,7 +15,7 @@ if defined?(Capistrano)
         set :foreman_log,         "\#{shared_path}/log"
         set :foreman_concurrency, false
       DESC
-      task :restart, :roles => :app do
+      task :restart, :roles => :web, :max_hosts => 1 do
         bundle_cmd          = fetch(:bundle_cmd, "bundle")
         foreman_format      = fetch(:foreman_format, "upstart")
         foreman_location    = fetch(:foreman_location, "/etc/init")
