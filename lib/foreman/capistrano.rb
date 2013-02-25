@@ -43,8 +43,8 @@ if defined?(Capistrano)
             "sleep 15", 
             "sudo /etc/init.d/nginx start",
             "sudo /etc/init.d/monit start", 
-            "sudo /etc/init.d/puppet start"].join('; '),
-            "sleep 5"
+            "sudo /etc/init.d/puppet start",
+            "sleep 5"].join('; ')
       end
     end
   end
