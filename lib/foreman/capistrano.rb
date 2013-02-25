@@ -40,10 +40,11 @@ if defined?(Capistrano)
             "monit stop -g #{application}", 
             export_cmd, 
             "monit start -g #{application}",
-            "sleep 20", 
+            "sleep 15", 
             "sudo /etc/init.d/nginx start",
             "sudo /etc/init.d/monit start", 
             "sudo /etc/init.d/puppet start"].join('; ')
+            "sleep 5", 
       end
     end
   end
