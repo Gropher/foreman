@@ -43,8 +43,6 @@ function stop() {
         read pid < $PID_FILE
         if checkpid $pid 2>&1; then
             kill -TERM $pid
-            sleep 1
-            kill -KILL $pid
             rm -f $PID_FILE
         else
             echo "[FAIL] process with PID ${pid} does not exist"
